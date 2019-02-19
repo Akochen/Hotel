@@ -1,5 +1,5 @@
 
-public class RoomTable {
+class RoomTable {
 	int roomArray[][];
 	
 	/**
@@ -21,7 +21,11 @@ public class RoomTable {
 	 * @param a the address of the start of the chain of the person filling the room
 	 */
 	public void fillRoom(int i, int a) {
-		roomArray[i-1][1] = a;
+		if(roomArray[i-1][1] == -1) {
+			roomArray[i-1][1] = a;
+		} else {
+			roomArray[getEmptyRoom()][1] = a;
+		}
 	}
 	
 	/**

@@ -1,5 +1,5 @@
 
-public class HashAddressesTable {
+class HashAddressesTable {
 	String hashArray[][];
 	
 	/**
@@ -97,6 +97,17 @@ public class HashAddressesTable {
 	 * @returnThe key of the guest
 	 */
 	public int getKey(int slot) {return Integer.parseInt(hashArray[slot][2]);}
+	
+	public int getKeyByName(String name) {
+		int r = -1;
+		
+		for(int i = 0; i < hashArray.length; i++) {
+			if(hashArray[i][1].equals(name)) {
+				r = Integer.parseInt(hashArray[i][2]);
+			}
+		}
+		return r;
+	}
 	
 	/**
 	 * @return returns the table as a string

@@ -1,3 +1,4 @@
+import javax.swing.plaf.synth.SynthStyle;
 
 public class Main {
 
@@ -5,19 +6,39 @@ public class Main {
 		// TODO Auto-generated method stub
 		
 		//Create tables
-		HotelTable hotel = new HotelTable();
 		HashAddressesTable hash = new HashAddressesTable();
 		RoomTable room = new RoomTable();
+		HotelTable hotel = new HotelTable(hash);
 		//Fill hash address table
 		fillHashTable(hash);
 		//Fill hotel table and assign rooms
 		fillHotelTable(hotel, hash, room);
-
-		System.out.println(hotel.toString() + "\n" + hash.toString() + "\n" + room.toString() + "\n" + hash.isSlotFilled(113));
-//		hash.delete("Adames, Winter");
-//		System.out.println(hotel.toString() + "\n" + hash.toString() + "\n" + room.toString() + "\n" + hash.isSlotFilled(113));
-//		hash.insert("kek");
-//		System.out.println(hotel.toString() + "\n" + hash.toString() + "\n" + room.toString() + "\n" + hash.isSlotFilled(113));
+		
+		print(hotel, hash, room);
+		list(hotel);
+		System.out.println("CHECK_INS/CHECK_OUTS/LOCATES");
+		check_out( "Foster, Kevin", hotel, hash, room);
+		check_out( "Weedy, Mark David", hotel, hash, room);
+		check_out( "Fields, Janet", hotel, hash, room);
+		check_in("Gupta, Naresh", 92, hotel, hash, room);
+		check_in("Johnson, Carol", 100, hotel, hash, room);
+		check_in("Grubbs, Frank", 55, hotel, hash, room);
+		check_out( "Gupta, Naresh", hotel, hash, room);
+		check_out( "Mayall, John", hotel, hash, room);
+		locate("Haley, Roger", hotel);
+		locate("Mix, Gary", hotel);
+		locate("Jam, Jim", hotel);
+		check_in("Goodman, Eric", 55, hotel, hash, room);
+		check_out( "Fields, Janet", hotel, hash, room);
+		locate("Goodman, Eric", hotel);
+		check_in("Fields, Janet", 55, hotel, hash, room);
+		check_in("Goodman, Eric", 55, hotel, hash, room);
+		check_out( "Johnson, Carol", hotel, hash, room);
+		check_out( "Fisher, Eddie", hotel, hash, room);
+		check_out( "Farmer, Jim", hotel, hash, room);
+		System.out.println("");
+		list(hotel);
+		print(hotel, hash, room);
 	}
 	
 	private static void fillHashTable(HashAddressesTable t) {
@@ -107,7 +128,7 @@ public class Main {
 		t.insert("Hubbard, Kwame");
 		t.insert("Mathew, Jiji");
 		t.insert("Nguyen, Linh");
-		t.insert("Fester, Kevin");
+		t.insert("Foster, Kevin");
 		t.insert("Weedy, Mark David");
 		t.insert("Fields, Janet");
 		t.insert("Mayall, John");
@@ -129,6 +150,48 @@ public class Main {
 				h.insert(t.getName(i), t.getKey(i), r.getEmptyRoom());
 				r.fillRoom(r.getEmptyRoom(), t.getKey(i));
 			}
+		}
+	}
+	
+	private static void check_in(String name, int room, HotelTable h, HashAddressesTable t, RoomTable r) {
+		t.insert(name);
+		h.insert(name, t.getKeyByName(name), r.getEmptyRoom());
+		if(room == -1) {
+			r.fillRoom(r.getEmptyRoom(), t.getKeyByName(name));
+		} else {
+			r.fillRoom(room, t.getKeyByName(name));
+		}
+	}
+	
+	private static void check_out(String name, HotelTable h, HashAddressesTable t, RoomTable r) {
+		if(h.getRoomByName(name) == -1) {
+			System.out.println("ERROR: " + name + " does not exist! CODE:1");
+		} else {
+			r.emptyRoom(h.getRoomByName(name));
+			
+			if(h.delete(name) == -1) {
+				System.out.println("ERROR: " + name +" does not exist! CODE:2");
+			} else if(t.delete(name) == -1) {;
+				System.out.println("ERROR: " + name +" does not exist! CODE:3");
+			} else {
+				System.out.println("Guest " + name + " succesfully checked out!");
+			}
+		}
+	}
+	
+	private static void print(HotelTable hotel, HashAddressesTable hash, RoomTable room) {
+		System.out.println(hotel.toString() + "\n" + hash.toString() + "\n" + room.toString());
+	}
+	
+	private static void list(HotelTable hotel) {
+		System.out.println(hotel.listRooms());
+	}
+	
+	private static void locate(String name, HotelTable hotel) {
+		if(hotel.getRoomByName(name) != -1) {
+			System.out.println(name + " is in room " + hotel.getRoomByName(name));
+		} else {
+			System.out.println("ERROR: Unable to locate guest! CODE:3");
 		}
 	}
 }
