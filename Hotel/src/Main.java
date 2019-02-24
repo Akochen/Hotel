@@ -15,7 +15,7 @@ public class Main {
 		fillHotelTable(hotel, hash, room);
 		
 		print(hotel, hash, room);
-		list(hotel);
+		//list(hotel);
 		System.out.println("CHECK_INS/CHECK_OUTS/LOCATES");
 		check_out( "Foster, Kevin", hotel, hash, room);
 		check_out( "Weedy, Mark David", hotel, hash, room);
@@ -180,7 +180,7 @@ public class Main {
 	}
 	
 	private static void print(HotelTable hotel, HashAddressesTable hash, RoomTable room) {
-		System.out.println(hotel.toString() + "\n" + hash.toString() + "\n" + room.toString());
+		System.out.println(hotel.toString() + "\n" + hash.toString() + "\n" + room.toString() + "\n");
 	}
 	
 	private static void list(HotelTable hotel) {

@@ -1,4 +1,3 @@
-import java.util.Arrays;
 
 class HotelTable {
 	private String[][] hotelArray;
@@ -63,19 +62,20 @@ class HotelTable {
 				hotelArray[key][4] = 0+"";
 				hotelArray[key][5] = 1+"";
 				b=key;
+				//System.out.println(name + " is native");
 			} else if (!hotelArray[key][1].equals("")) {//if name is not empty
-				if(!name.equals(hotelArray[key][1])) { 
+				if(!name.equals(hotelArray[key][1]) && hashTable.getKeyByName(name) != key) { 
 					//Native spot is filled by foreigner so foreigner is moved and native is inserted
 						String pName = hotelArray[key][1] + "";
 						String pRoom = hotelArray[key][2];
-						insert(pName + "", hashTable.getKeyByName(pName), Integer.parseInt(pRoom));
 						b = key;
 						hotelArray[key][1] = name+"";
 						hotelArray[key][2] = room+"";
 						hotelArray[key][3] = 0+""; 
-						hotelArray[key][4] = getFinalForward(key)+""; //working?
+						hotelArray[key][4] = 0+"";
 						hotelArray[key][5] = 1+"";
-						hotelArray[getFinalForward(key)][3] = 0+"";
+						insert(pName + "", hashTable.getKeyByName(pName), Integer.parseInt(pRoom));
+						//System.out.println(name + " replaced a foreigner");
 				} else {
 					//native spot is filled by native so it's inserted in first open spot as foreigner
 					int n = getNextEmpty();
@@ -85,6 +85,7 @@ class HotelTable {
 					hotelArray[n][4] = getFinalForward(key)+"";
 					hotelArray[n][5] = 1+"";
 					hotelArray[getFinalForward(key)][3] = n+"";
+					//System.out.println(name + " is a foreigner");
 				}
 			}
 		}
