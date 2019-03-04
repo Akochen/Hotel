@@ -1,9 +1,12 @@
-import javax.swing.plaf.synth.SynthStyle;
-
 public class Main {
+	private static int f;
+	private static int s;
+	private static int sp;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		int totalProbes = 0;
+		int actionCount = 0;
 		
 		//Create tables
 		HashAddressesTable hash = new HashAddressesTable();
@@ -13,32 +16,54 @@ public class Main {
 		fillHashTable(hash);
 		//Fill hotel table and assign rooms
 		fillHotelTable(hotel, hash, room);
-		
 		print(hotel, hash, room);
 		//list(hotel);
 		System.out.println("CHECK_INS/CHECK_OUTS/LOCATES");
-		check_out( "Foster, Kevin", hotel, hash, room);
-		check_out( "Weedy, Mark David", hotel, hash, room);
-		check_out( "Fields, Janet", hotel, hash, room);
-		check_in("Gupta, Naresh", 92, hotel, hash, room);
-		check_in("Johnson, Carol", 100, hotel, hash, room);
-		check_in("Grubbs, Frank", 55, hotel, hash, room);
-		check_out( "Gupta, Naresh", hotel, hash, room);
-		check_out( "Mayall, John", hotel, hash, room);
-		locate("Haley, Roger", hotel);
-		locate("Mix, Gary", hotel);
-		locate("Jam, Jim", hotel);
-		check_in("Goodman, Eric", 55, hotel, hash, room);
-		check_out( "Fields, Janet", hotel, hash, room);
-		locate("Goodman, Eric", hotel);
-		check_in("Fields, Janet", 55, hotel, hash, room);
-		check_in("Goodman, Eric", 55, hotel, hash, room);
-		check_out( "Johnson, Carol", hotel, hash, room);
-		check_out( "Fisher, Eddie", hotel, hash, room);
-		check_out( "Farmer, Jim", hotel, hash, room);
-		System.out.println("");
+		totalProbes += check_out( "Foster, Kevin", hotel, hash, room);
+		actionCount++;
+		totalProbes += check_out( "Weedy, Mark David", hotel, hash, room);
+		actionCount++;
+		totalProbes += check_out( "Fields, Janet", hotel, hash, room);
+		actionCount++;
+		totalProbes += check_in("Gupta, Naresh", 92, hotel, hash, room);
+		actionCount++;
+		totalProbes += check_in("Johnson, Carol", 100, hotel, hash, room);
+		actionCount++;
+		totalProbes += check_in("Grubbs, Frank", 55, hotel, hash, room);
+		actionCount++;
+		totalProbes += check_out( "Gupta, Naresh", hotel, hash, room);
+		actionCount++;
+		totalProbes += check_out( "Mayall, John", hotel, hash, room);
+		actionCount++;
+		totalProbes += locate("Haley, Roger", hotel);
+		actionCount++;
+		totalProbes += locate("Mix, Gary", hotel);
+		actionCount++;
+		totalProbes += locate("Jam, Jim", hotel);
+		actionCount++;
+		totalProbes += check_in("Goodman, Eric", 55, hotel, hash, room);
+		actionCount++;
+		totalProbes += check_out( "Fields, Janet", hotel, hash, room);
+		actionCount++;
+		totalProbes += locate("Goodman, Eric", hotel);
+		actionCount++;
+		totalProbes += check_in("Fields, Janet", 55, hotel, hash, room);
+		actionCount++;
+		totalProbes += check_in("Smith, Mary", 11, hotel, hash, room);
+		actionCount++;
+		totalProbes += check_in("Smith, Martha", 44, hotel, hash, room);
+		actionCount++;
+		totalProbes += check_out( "Johnson, Carol", hotel, hash, room);
+		actionCount++;
+		totalProbes += check_out( "Fisher, Eddie", hotel, hash, room);
+		actionCount++;
+		totalProbes += check_out( "Farmer, Jim", hotel, hash, room);
+		actionCount++;
 		list(hotel);
 		print(hotel, hash, room);
+		System.out.println("Total Probes: " + totalProbes + "\nAvg Probes: " + ((float)totalProbes/(float)actionCount) + "\nTotal Actions: " + actionCount 
+				+ "\nSuccessful Operations: " + s + "\nProbes per Success: " + ((float)sp/(float)s) + "\nFailed Operations: " + f 
+				+ "\nProbes per Failure: 1");
 	}
 	
 	private static void fillHashTable(HashAddressesTable t) {
@@ -153,29 +178,54 @@ public class Main {
 		}
 	}
 	
-	private static void check_in(String name, int room, HotelTable h, HashAddressesTable t, RoomTable r) {
-		t.insert(name);
-		h.insert(name, t.getKeyByName(name), r.getEmptyRoom());
-		if(room == -1) {
-			r.fillRoom(r.getEmptyRoom(), t.getKeyByName(name));
-		} else {
-			r.fillRoom(room, t.getKeyByName(name));
+	private static int check_in(String name, int room, HotelTable h, HashAddressesTable t, RoomTable r) {
+		if(t.insert(name) == -1) {
+			System.out.println("ERROR: " + name + " Can't be checked in! CODE:1\nProbes: 1");
+			f++;
+			return 1;
 		}
+		int[] array = h.insert(name, t.getKeyByName(name), r.getEmptyRoom());
+		if(array[0] == -1) {
+			System.out.println("ERROR: " + name + " Can't be checked in! CODE:2\nProbes: 1");
+			f++;
+			return 1;
+		} else {
+			System.out.println(name + " was successfully checked in!\nProbes: " + array[1]);
+			s++;
+			sp += array[1];
+		}
+		if(room == -1) {
+			r.fillRoom(r.getEmptyRoom(), h.getRoomByName(name));
+			return 1;
+		} else {
+			r.fillRoom(room, h.getRoomByName(name));
+		}
+		return array[1];
 	}
 	
-	private static void check_out(String name, HotelTable h, HashAddressesTable t, RoomTable r) {
+	private static int check_out(String name, HotelTable h, HashAddressesTable t, RoomTable r) {
 		if(h.getRoomByName(name) == -1) {
-			System.out.println("ERROR: " + name + " does not exist! CODE:1");
+			System.out.println("ERROR: " + name + " does not exist! CODE:1\nProbes: 1");
+			f++;
+			return 1;
 		} else {
-			r.emptyRoom(h.getRoomByName(name));
-			
-			if(h.delete(name) == -1) {
-				System.out.println("ERROR: " + name +" does not exist! CODE:2");
-			} else if(t.delete(name) == -1) {;
-				System.out.println("ERROR: " + name +" does not exist! CODE:3");
+			r.emptyRoom(h.getRoomByName(name)-1);
+			int[] array = h.delete(name);
+			if(array[0] == -1) {
+				System.out.println("ERROR: " + name +" does not exist! CODE:2\nProbes: 1");
+				f++;
+				return 1;
+			} else if(t.delete(name) == -1) {
+				System.out.println("ERROR: " + name +" does not exist! CODE:3\nProbes: 1");
+				f++;
+				return 1;
 			} else {
-				System.out.println("Guest " + name + " succesfully checked out!");
+				System.out.println("Guest " + name + " succesfully checked out!\nProbes: " + array[1]);
+				s++;
+				sp += array[1];
+				return array[1];
 			}
+			
 		}
 	}
 	
@@ -187,11 +237,16 @@ public class Main {
 		System.out.println(hotel.listRooms());
 	}
 	
-	private static void locate(String name, HotelTable hotel) {
-		if(hotel.getRoomByName(name) != -1) {
-			System.out.println(name + " is in room " + hotel.getRoomByName(name));
+	private static int locate(String name, HotelTable hotel) {
+		int a[] = hotel.getRoomByNameForLocate(name);
+		if(a[1] != -1) {
+			System.out.println(name + " is in room " + hotel.getRoomByName(name) + "\nProbes: " + a[0]);
+			s++;
+			sp += a[0];
 		} else {
-			System.out.println("ERROR: Unable to locate guest! CODE:3");
+			System.out.println("ERROR: Unable to locate guest " + name + "! CODE:3" + "\nProbes: " + a[0]);
+			f++;
 		}
+		return a[0];
 	}
 }

@@ -8,7 +8,7 @@ class HashAddressesTable {
 	 */
 	public HashAddressesTable() {
 		//0: subscript 1: name, 2: key
-		hashArray = new String [114][3];
+		hashArray = new String [113][3];
 		
 		for(int i = 0; i < hashArray.length; i++) {
 			hashArray[i][0] = i+1+"";
@@ -55,7 +55,7 @@ class HashAddressesTable {
 	private int findEmptySlot() {
 		int i = -1;
 		
-		for(int j = 0; i < hashArray.length; j++) {
+		for(int j = 0; j < hashArray.length; j++) {
 			if(hashArray[j][1].equals("")) {
 				i = j;
 				break;
@@ -113,10 +113,10 @@ class HashAddressesTable {
 	 * @return returns the table as a string
 	 */
 	public String toString() {
-		String r= "\nHASH ADDRESSES\n";
-		
+		String r= "\nHASH ADDRESSES\n__________________________________\n";
+		r += String.format("%1$-3s", "Sub") +"|" + String.format("%1$-25s", "Name") + "|" + String.format("%1$-3s", "key|") + "\n---|-------------------------|---|\n"; 
 		for(int i = 0; i < hashArray.length; i++) {
-			r += hashArray[i][0] + ", Name: " + hashArray[i][1] + ", Key: " +  hashArray[i][2] 
+			r += String.format("%1$-3s", hashArray[i][0]) +"|" + String.format("%1$-25s", hashArray[i][1]) + "|" + String.format("%1$-3s", hashArray[i][2]) + "|" 
 					+ "\n";
 		}
 		return r;

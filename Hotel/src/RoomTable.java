@@ -55,10 +55,10 @@ class RoomTable {
 	 * @return returns the table as a string
 	 */
 	public String toString() {
-		String r= "\nROOMS\n";
-		
+		String r= "\nROOMS\n__________\n";
+		r += String.format("%1$-4s", "Sub") +"|" + String.format("%1$-4s", "Add#") + "|\n----|----|\n"; 
 		for(int i = 0; i < roomArray.length; i++) {
-			r += "Room Num: " + roomArray[i][0] + ", Address: " +  roomArray[i][1] 
+			r += String.format("%1$-4s", roomArray[i][0]) +"|" + String.format("%1$-4s", roomArray[i][1]) + "|"
 					+ "\n";
 		}
 		return r;
